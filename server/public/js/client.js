@@ -23,7 +23,7 @@ function getMessages(){
     $.get('https://filthwizard.localtunnel.me/call', (data) => {
         data.forEach(addMessages);
     });
-    location.reload(true);
+    
     window.scrollTo(0,document.body.scrollHeight);
 }
 
