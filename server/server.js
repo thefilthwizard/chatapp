@@ -73,7 +73,7 @@ const server = http.listen(8099, () => {
    const port = server.address().port;
 });
 
-const tunnel = ltunnel(8099, { subdomain: 'filthwizzard' }, (err, tun) => {
+const tunnel = ltunnel(8099, { subdomain: 'filthwizard' }, (err, tun) => {
    if (err) console.log('tunnel error: ' + err);
    let puburl = tun.url;
    console.log('puburl: ' + puburl + '\n');

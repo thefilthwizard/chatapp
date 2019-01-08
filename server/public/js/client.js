@@ -21,11 +21,11 @@ function addMessages(message){
 
 function getMessages(){
     $('#messages').empty();
-    $.get('https://filthwizzard.localtunnel.me/call', (data) => {
+    $.get('https://filthwizard.localtunnel.me/call', (data) => {
         data.forEach(addMessages);
     });
 }
 
 function sendMessage(message){
-    $.post('https://filthwizzard.localtunnel.me/msg', message);
+    $.post('https://filthwizard.localtunnel.me/msg', message);
 }
