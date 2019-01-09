@@ -1,3 +1,5 @@
+getMessages()
+
 $(() => {
   $('#send').click(() => {
     sendMessage({
@@ -5,7 +7,7 @@ $(() => {
       name: $('#name').val(),
       message: $('#message').val()
     })
-    getMessages()
+    latestMsg()
   })
 })
 
@@ -13,7 +15,7 @@ const socket = io()
 
 socket.on('message', () => {
   console.log('get emmit from socket.io')
-  getMessages()
+  latestMsg()
 })
 
 function addMessages(message) {
@@ -26,7 +28,15 @@ function getMessages() {
   $('#messages').empty()
   $.get('http://192.243.100.152:8099/call', (data) => {
     data.forEach(addMessages)
+
   })
+
+  function latestMsg() {
+    $.get('http://192.243.100.152:8099/call', (data) => {
+      const lastMsg = data[data.length - 1]
+      addMessages(lastMsg)
+    }
+  }
 
   window.scrollTo(0, document.body.scrollHeight)
 }
