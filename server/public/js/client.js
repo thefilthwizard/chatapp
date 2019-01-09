@@ -21,7 +21,7 @@ function addMessages(message) {
 
 function getMessages() {
   $('#messages').empty()
-  $.get('https://192.243.100.152:8099/call', (data) => {
+  $.get('http://192.243.100.152:8099/call', (data) => {
     data.forEach(addMessages)
   })
 
@@ -29,5 +29,5 @@ function getMessages() {
 }
 
 function sendMessage(message) {
-    $.post('https://192.243.100.152:8099/msg', message)
+    $.post('http://192.243.100.152:8099/msg', message)
 }
