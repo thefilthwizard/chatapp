@@ -11,7 +11,10 @@ $(() => {
 
 const socket = io()
 
-socket.on('message', getMessages)
+socket.on('message', () => {
+  console.log('get emmit from socket.io')
+  getMessages()
+})
 
 function addMessages(message) {
   $('#messages').append(`
