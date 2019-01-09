@@ -8,6 +8,7 @@ $(() => {
       message: $('#message').val()
     })
     latestMsg()
+    $('#message').empty()
   })
 })
 
