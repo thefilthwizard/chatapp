@@ -45,6 +45,7 @@ app.post('/msg', (req, res) => {
     return console.log('post error:' + error)
   } finally {
     console.log('Message Posted')
+    io.emit('message')
   }
 })
 
