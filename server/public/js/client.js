@@ -21,7 +21,7 @@ function addMessages(message) {
 
 function getMessages() {
   $('#messages').empty()
-  $.get('https://filthwizard.localtunnel.me/call', (data) => {
+  $.get('https://192.243.100.152:8099/call', (data) => {
     data.forEach(addMessages)
   })
 
@@ -29,5 +29,5 @@ function getMessages() {
 }
 
 function sendMessage(message) {
-    $.post('https://filthwizard.localtunnel.me/msg', message)
+    $.post('https://192.243.100.152:8099/msg', message)
 }
