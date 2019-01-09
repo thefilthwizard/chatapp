@@ -31,6 +31,7 @@ function getMessages() {
     data.forEach(addMessages)
 
   })
+}
 
   function latestMsg() {
     $.get('http://192.243.100.152:8099/call', (data) => {
