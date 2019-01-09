@@ -7,7 +7,6 @@ $(() => {
       name: $('#name').val(),
       message: $('#message').val()
     })
-    latestMsg()
     $('#message').empty()
   })
 })
@@ -39,7 +38,7 @@ function latestMsg() {
     addMessages(lastMsg)
   })
   window.scrollTo(0, document.body.scrollHeight)
-}  
+}
 
 function sendMessage(message) {
     $.post('http://192.243.100.152:8099/msg', message)
