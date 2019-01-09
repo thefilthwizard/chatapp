@@ -29,19 +29,17 @@ function getMessages() {
   $('#messages').empty()
   $.get('http://192.243.100.152:8099/call', (data) => {
     data.forEach(addMessages)
-
   })
-}
-
-  function latestMsg() {
-    $.get('http://192.243.100.152:8099/call', (data) => {
-      const lastMsg = data[data.length - 1]
-      addMessages(lastMsg)
-    })
-  }
-
   window.scrollTo(0, document.body.scrollHeight)
 }
+
+function latestMsg() {
+  $.get('http://192.243.100.152:8099/call', (data) => {
+    const lastMsg = data[data.length - 1]
+    addMessages(lastMsg)
+  })
+  window.scrollTo(0, document.body.scrollHeight)
+}  
 
 function sendMessage(message) {
     $.post('http://192.243.100.152:8099/msg', message)
