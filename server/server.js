@@ -10,10 +10,10 @@ const ltunnel = require('localtunnel');
 require('https').globalAgent.options.ca = require('ssl-root-cas/latest').create();
 
 app.use(express.static('public'));
-app.use( bodyParser.json() );       
-app.use(bodyParser.urlencoded({     
+app.use( bodyParser.json() );
+app.use(bodyParser.urlencoded({
   extended: false
-})); 
+}));
 
 let Message = mongoose.model('Message', {
    id: Number,
@@ -33,10 +33,10 @@ io.on('connection', () => {
 
 app.post('/msg', (req, res) => {
    try{
-      let message = new Message(req.body);  
+      let message = new Message(req.body);
       let savedMessage = message.save( (err) => {
          res.sendStatus(200);
-      });   
+      });
     }
     catch (error) {
       res.sendStatus(500);
@@ -62,18 +62,18 @@ app.get('/call', (req, res) => {
 
 app.get('/ping', (req, res) => {
    res.sendStatus(200);
-});   
+});
 
 app.get('/', (req, res) => {
    res.sendFile( __dirname + '/public/' + 'index.html' );
 });
 
-const server = http.listen(8099, () => {
+const server = http.listen(8099, '192.243.100.152', () => {
    const host = server.address().address;
    const port = server.address().port;
 });
 
-const tunnel = ltunnel(8099, { subdomain: 'filthwizard' }, (err, tun) => {
+/*const tunnel = ltunnel(8099, { subdomain: 'filthwizard' }, (err, tun) => {
    if (err) console.log('tunnel error: ' + err);
    let puburl = tun.url;
    console.log('puburl: ' + puburl + '\n');
@@ -81,4 +81,4 @@ const tunnel = ltunnel(8099, { subdomain: 'filthwizard' }, (err, tun) => {
 
 tunnel.on('close', () => {
    console.log('pub tunnel is closed\n');
-});
+});*/
