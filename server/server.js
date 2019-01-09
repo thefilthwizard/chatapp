@@ -6,6 +6,7 @@ const mongoose = require('mongoose')
 // const fs = require('fs');
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
+const path = require('path')
 // const ltunnel = require('localtunnel')
 require('https').globalAgent.options.ca = require('ssl-root-cas/latest').create()
 
@@ -67,7 +68,8 @@ app.get('/ping', (req, res) => {
 })
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/' + 'index.html')
+  const pathToIndex = path.join(__dirname, '/public/', 'index.html')
+  res.sendFile(pathToIndex)
 })
 
 const server = http.listen(8099, () => {
