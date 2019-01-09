@@ -68,7 +68,7 @@ app.get('/', (req, res) => {
    res.sendFile( __dirname + '/public/' + 'index.html' );
 });
 
-const server = http.listen(8099, '192.243.100.152', () => {
+const server = http.listen(8099, () => {
    const host = server.address().address;
    const port = server.address().port;
 });
