@@ -4,6 +4,10 @@
 
 .chatwindow {
     background-color: #FFFFFF;
+    float:left;
+    width: 800px;
+    overflow-y: auto;
+    height: 600px;
 }
 
 h4 {
