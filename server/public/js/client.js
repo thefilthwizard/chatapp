@@ -29,7 +29,7 @@ function getMessages() {
   $.get('http://192.243.100.152:8099/call', (data) => {
     data.forEach(addMessages);
   });
-  window.scrollTo(0, document.body.scrollHeight);
+  $('#messages').scrollTop = $('#messages').scrollHeight;
 }
 
 function latestMsg() {
@@ -37,7 +37,7 @@ function latestMsg() {
     const lastMsg = data[data.length - 1];
     addMessages(lastMsg);
   })
-  window.scrollTo(0, document.body.scrollHeight);
+  $('#messages').scrollTop = $('#messages').scrollHeight;
 }
 
 function sendMessage(message) {
