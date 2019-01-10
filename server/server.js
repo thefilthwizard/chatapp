@@ -60,7 +60,9 @@ app.get('/messages/:user', (req, res) => {
 
 app.get('/call', (req, res) => {
   const msgID = req.params.id;
+  console.log(msgID);
   Message.find({ id: msgID }, (err, messages) => {
+    console.log(messages);
     res.send(messages);
     console.log(err);
   });
