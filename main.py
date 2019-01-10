@@ -9,10 +9,13 @@ POSTURL = 'http://192.243.100.152:8099/msg'
 
 socket = socketio.Client()
 
+# this triggers when a message is posted on the server.
+# TODO.. this function should update the Message board on the client side UI
 @socket.on('message')
 def getLastMsg():
     return 0
 
+# just trigger when someone connects to the server... not really needed, used for testing
 @socket.on('userconnected')
 def showUserConnected():    
     addstr('\nuser connected\n', color_pair(3) + A_BOLD)
