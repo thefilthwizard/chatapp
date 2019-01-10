@@ -25,11 +25,11 @@ const Message = mongoose.model('Message', {
 const dbUrl = 'mongodb://localhost:27017/dirtychat'; // setup mongo db
 
 mongoose.connect(dbUrl, { useNewUrlParser: true }, (err) => {
-  console.log('mongodb connected', err);
+  io.emit('mongodbconnected: ', err);
 });
 
 io.on('connection', () => {
-  console.log('a user is connected');
+  io.emit('userconnected');
 });
 
 app.post('/msg', (req, res) => {
