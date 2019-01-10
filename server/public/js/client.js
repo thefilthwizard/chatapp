@@ -36,9 +36,11 @@ function getMessages() {
   $.get('http://192.243.100.152:8099/call', (data) => {
     data.forEach(addMessages);
   });
-  setTimeout(() => {
-    sync.resolve();
-  }, 500);
+  while (!sync) {
+    setTimeout(() => {
+      sync.resolve();
+    }, 1);
+  }
   return sync;
 }
 
@@ -48,9 +50,11 @@ function latestMsg() {
     const lastMsg = data[data.length - 1];
     addMessages(lastMsg);
   });
-  setTimeout(() => {
-    sync.resolve();
-  }, 500);
+  while (!sync) {
+    setTimeout(() => {
+      sync.resolve();
+    }, 1);
+  }
   return sync;
 }
 
