@@ -1,5 +1,10 @@
 const msgDiv = document.getElementById('messages');
-getMessages();
+const socket = io();
+
+$(document).onload(() => {
+  getMessages();
+  msgDiv.scrollTop = msgDiv.scrollHeight;
+});
 
 $(() => {
   $('#send').click(() => {
@@ -11,8 +16,6 @@ $(() => {
     $('#message').empty();
   });
 });
-
-const socket = io();
 
 socket.on('message', () => {
   console.log('get emmit from socket.io');
@@ -30,7 +33,6 @@ function getMessages() {
   $.get('http://192.243.100.152:8099/call', (data) => {
     data.forEach(addMessages);
   });
-  msgDiv.scrollTop = msgDiv.scrollHeight;
 }
 
 function latestMsg() {
