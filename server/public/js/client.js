@@ -1,6 +1,5 @@
-getMessages();
-
 const msgDiv = document.getElementById('messages');
+getMessages();
 
 $(() => {
   $('#send').click(() => {
