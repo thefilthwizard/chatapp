@@ -6,6 +6,10 @@ $(window).on('load', () => {
   msgDiv.scrollTop = msgDiv.scrollHeight;
 });
 
+$(window).on('ready', () => {
+  msgDiv.scrollTop = msgDiv.scrollHeight;
+});
+
 $(() => {
   $('#send').click(() => {
     sendMessage({
@@ -18,7 +22,6 @@ $(() => {
 });
 
 socket.on('message', () => {
-  console.log('get emmit from socket.io');
   latestMsg();
 });
 
