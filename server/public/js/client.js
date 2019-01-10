@@ -21,7 +21,7 @@ $(() => {
 });
 
 socket.on('message', () => {
-  latestMsg();
+  latestMsg().then(autoScroll);
 });
 
 function addMessages(message) {
@@ -31,7 +31,7 @@ function addMessages(message) {
 }
 
 function getMessages() {
-   const sync = $.Deferred();
+  const sync = $.Deferred();
   $('#messages').empty();
   $.get('http://192.243.100.152:8099/call', (data) => {
     data.forEach(addMessages);
@@ -43,11 +43,15 @@ function getMessages() {
 }
 
 function latestMsg() {
+  const sync = $.Deferred();
   $.get('http://192.243.100.152:8099/call', (data) => {
     const lastMsg = data[data.length - 1];
     addMessages(lastMsg);
   });
-  msgDiv.scrollTop = msgDiv.scrollHeight;
+  setTimeout(() => {
+    sync.resolve();
+  }, 5000);
+  return sync;
 }
 
 function sendMessage(message) {
