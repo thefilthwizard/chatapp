@@ -38,7 +38,7 @@ function getMessages() {
   });
   setTimeout(() => {
     sync.resolve();
-  }, 5000);
+  }, 500);
   return sync;
 }
 
@@ -50,7 +50,7 @@ function latestMsg() {
   });
   setTimeout(() => {
     sync.resolve();
-  }, 5000);
+  }, 500);
   return sync;
 }
 
