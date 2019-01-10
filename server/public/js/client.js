@@ -1,7 +1,7 @@
 const msgDiv = document.getElementById('messages');
 const socket = io();
 
-$(document).on('load', () => {
+$(window).on('load', () => {
   getMessages();
   msgDiv.scrollTop = msgDiv.scrollHeight;
 });
