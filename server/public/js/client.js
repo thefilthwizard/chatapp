@@ -6,9 +6,7 @@ $(window).on('load', () => {
 });
 
 function autoScroll() {
-  msgDiv.style.overflow = 'hidden';
   msgDiv.scrollTop = msgDiv.scrollHeight;
-  msgDiv.style.overflow = 'scroll';
 }
 
 $(() => {
