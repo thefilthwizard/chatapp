@@ -36,10 +36,21 @@ def main():
     # ========================================================
     # this will need to go to a fucntion call to send messages
     # --------------------------------------------------------
-    msgsent = requests.post(POSTURL, { 'id': 999, 'name': 'python', 'message': '#test message from python/curses' })
+    msgsent = requests.post(POSTURL, { 'id': 777, 'name': 'python', 'message': '#test message from python/curses' })
     if msgsent.status_code == 200:
         addstr('\nMessage posted on server\n', color_pair(2))   
     # ========================================================
+    # ===============================================================
+    # this is get all messages... also to go into a separate function
+    #----------------------------------------------------------------
+    data = requests.get(url = GETURL, params = { id: 777 })
+    allMsgs = data.json()
+    for mesg in allMsgs:       
+        name = mesg['name']
+        actualMsg = mesg['message']
+        addstr(name + '\n', color_pair(3))
+        addstr(actualMsg + '\n', color_pair(1))
+    # ===============================================================
     addstr('\npress <anykey> to exit')
     getch()
     endwin()

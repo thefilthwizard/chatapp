@@ -33,7 +33,7 @@ function addMessages(message) {
 function getMessages() {
   const sync = $.Deferred();
   $('#messages').empty();
-  $.get('http://192.243.100.152:8099/call', (data) => {
+  $.get('http://192.243.100.152:8099/call', { id: 999 }, (data) => {
     data.forEach(addMessages);
   });
   setTimeout(() => {
@@ -44,7 +44,7 @@ function getMessages() {
 
 function latestMsg() {
   const sync = $.Deferred();
-  $.get('http://192.243.100.152:8099/call', (data) => {
+  $.get('http://192.243.100.152:8099/call', { id: 999 }, (data) => {
     const lastMsg = data[data.length - 1];
     addMessages(lastMsg);
   });
