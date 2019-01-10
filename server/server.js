@@ -59,6 +59,7 @@ app.get('/messages/:user', (req, res) => {
 });
 
 app.get('/call', (req, res) => {
+  console.lo(req);
   const msgID = req.params.id;
   console.log(msgID);
   Message.find({ id: msgID }, (err, messages) => {
