@@ -43,11 +43,12 @@ def main():
     # ===============================================================
     # this is get all messages... also to go into a separate function
     #----------------------------------------------------------------
-    data = requests.get(url = GETURL, params = { id: 777 })
+    data = requests.get(url = GETURL, params = { 'id': 777 })
     allMsgs = data.json()
     for mesg in allMsgs:       
         name = mesg['name']
         actualMsg = mesg['message']
+        addstr('--------------------------------------\n')
         addstr(name + '\n', color_pair(3))
         addstr(actualMsg + '\n', color_pair(1))
     # ===============================================================
