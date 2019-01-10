@@ -2,13 +2,12 @@ const msgDiv = document.getElementById('messages');
 const socket = io();
 
 $(window).on('load', () => {
-  getMessages();
-  msgDiv.scrollTop = msgDiv.scrollHeight;
+  getMessages().then(autoScroll);  
 });
 
-$(window).on('ready', () => {
+function autoScroll() {
   msgDiv.scrollTop = msgDiv.scrollHeight;
-});
+}
 
 $(() => {
   $('#send').click(() => {
@@ -32,10 +31,15 @@ function addMessages(message) {
 }
 
 function getMessages() {
+   const sync = $.Deferred();
   $('#messages').empty();
   $.get('http://192.243.100.152:8099/call', (data) => {
     data.forEach(addMessages);
   });
+  setTimeout(() => {
+    sync.resolve();
+  }, 5000);
+  return sync;
 }
 
 function latestMsg() {
