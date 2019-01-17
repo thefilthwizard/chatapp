@@ -26,7 +26,7 @@ def getLastMsg():
 # just trigger when someone connects to the server... not really needed, used for testing
 @socket.on('userconnected')
 def showUserConnected():
-        addstr('\nuser connected\n', color_pair(3) + A_BOLD)
+        mvaddstr(1, 1, 'user connected')
 
 
 def getMessages(id):
@@ -36,22 +36,22 @@ def getMessages(id):
                 name = mesg['name']
                 actualMsg = mesg['message']
                 addstr('--------------------------------------\n')
-                addstr(name + '\n', color_pair(3))
-                addstr(actualMsg + '\n', color_pair(1))
+                addstr(name + '\n'))
+                addstr(actualMsg + '\n')
 
 
 def postMessage():
         msgsent = requests.post(POSTURL, { 'id': 777, 'name': 'python', 'message': '#test message from python/curses' })
         if msgsent.status_code == 200:
-                addstr('\nMessage posted on server\n', color_pair(2))
+                addstr('Message posted on server')
 
 
 def ping():
         ping = requests.get(url = PINGURL)
         if ping.status_code == 200:
-                addstr('Connected to server\n', color_pair(1) + A_BOLD)
+                addstr('Connected to server\n')
         else:
-                addstr('Server Connection failed\n', color_pair(2) + A_BOLD)
+                addstr('Server Connection failed\n')
 
 
 def create_newwin(height, width, starty, startx):
