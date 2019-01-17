@@ -60,6 +60,13 @@ def create_newwin(height, width, starty, startx):
         wrefresh(local_win)
         return local_win
 
+# method to connect to the socket with some error handling... :-)
+def connectServer():
+        try:
+                socket.connect('http://192.243.100.152:8099')
+        except:
+                mvaddstr(1, 1, 'Could not connect to server')
+
 
 def main():
         global running
@@ -70,7 +77,7 @@ def main():
         noecho()
         curs_set(0)
         keypad(stdscr, True)
-        #socket.connect('http://192.243.100.152:8099')
+        connectServer()
         start_color()
         init_pair(1, COLOR_BLUE, COLOR_BLACK)
         refresh()
@@ -87,10 +94,10 @@ def main():
 
 #signal handler listening for ctrl+c command
 def signal_handler(sig, frame):
-    global running
-    running = False
-    print('You pressed Ctrl+C!')
+        global running
+        running = False
+        print('You pressed Ctrl+C!')
 
 
 if __name__ == '__main__':
-    main()
+        main()
