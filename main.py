@@ -1,6 +1,8 @@
 from unicurses import *
-import socketio
+
 import requests
+import socketio
+import signal
 
 
 GETURL = 'http://192.243.100.152:8099/call'
@@ -8,6 +10,7 @@ PINGURL = 'http://192.243.100.152:8099/ping'
 POSTURL = 'http://192.243.100.152:8099/msg'
 
 
+running = True
 socket = socketio.Client()
 
 
@@ -22,14 +25,14 @@ def getLastMsg():
 
 # just trigger when someone connects to the server... not really needed, used for testing
 @socket.on('userconnected')
-def showUserConnected():    
+def showUserConnected():
         addstr('\nuser connected\n', color_pair(3) + A_BOLD)
 
 
 def getMessages(id):
         data = requests.get(url = GETURL, params = { 'id': id })
         allMsgs = data.json()
-        for mesg in allMsgs:       
+        for mesg in allMsgs:
                 name = mesg['name']
                 actualMsg = mesg['message']
                 addstr('--------------------------------------\n')
@@ -59,6 +62,9 @@ def create_newwin(height, width, starty, startx):
 
 
 def main():
+        global running
+        #signal bind listening for sigint
+        signal.signal(signal.SIGINT, signal_handler)
         stdscr = initscr()
         cbreak()
         noecho()
@@ -66,21 +72,25 @@ def main():
         keypad(stdscr, True)
         #socket.connect('http://192.243.100.152:8099')
         start_color()
-        init_pair(1, COLOR_BLUE, COLOR_BLACK)        
+        init_pair(1, COLOR_BLUE, COLOR_BLACK)
         refresh()
         msgWin = create_newwin(7, 78, 16, 1)
         mvaddstr(16, 2, 'Send Message')
         menuWin = create_newwin(3,78, 23, 1)
         mvaddstr(24, 2, '<ESC>exit', COLOR_PAIR(1) + A_BOLD)
-        running = True
         while running:
                 KEY = getch()
                 if KEY == 27: # ESC key...
                         running = False
-        endwin()       
+        endwin()
         return 0
+
+#signal handler listening for ctrl+c command
+def signal_handler(sig, frame):
+    global running
+    running = False
+    print('You pressed Ctrl+C!')
 
 
 if __name__ == '__main__':
     main()
-
