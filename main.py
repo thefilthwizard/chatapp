@@ -27,7 +27,7 @@ def getLastMsg():
 # just trigger when someone connects to the server... not really needed, used for testing
 @socket.on('userconnected')
 def showUserConnected():
-        mvaddstr(1, 1, 'user connected')
+        mvaddstr(24, 63, 'user connected', COLOR_PAIR(2) + A_BOLD)
 
 
 def getMessages(id):
@@ -60,14 +60,14 @@ def create_newwin(height, width, starty, startx):
         box(local_win, 0, 0)
         wrefresh(local_win)
         return local_win
-        
+
 
 # method to connect to the socket with some error handling... :-)
 def connectServer():
         try:
                 socket.connect('http://192.243.100.152:8099')
         except:
-                mvaddstr(1, 1, 'Could not connect to server')
+                mvaddstr(24, 50, 'Could not connect to server', COLOR_PAIR(3) + A_BOLD)
 
 
 def initCurses():
@@ -78,6 +78,8 @@ def initCurses():
         keypad(stdscr, True)
         start_color()
         init_pair(1, COLOR_BLUE, COLOR_BLACK)
+        init_pair(2, COLOR_GREEN, COLOR_BLACK)
+        init_pair(3, COLOR_RED, COLOR_BLACK)
         refresh()
 
 
@@ -87,7 +89,9 @@ def main():
         #signal bind listening for sigint
         signal.signal(signal.SIGINT, signal_handler)
         initCurses()
-        connectServer()        
+        connectServer()
+        viewWin = create_newwin(14, 78 , 1, 1)
+        scrollok(viewWin, True)      
         msgWin = create_newwin(7, 78, 16, 1)
         mvaddstr(16, 2, 'Send Message')
         menuWin = create_newwin(3,78, 23, 1)
