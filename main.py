@@ -12,6 +12,7 @@ POSTURL = 'http://192.243.100.152:8099/msg'
 
 running = True
 socket = socketio.Client()
+stdscr = initscr()
 
 
 # this triggers when a message is posted on the server.
@@ -36,7 +37,7 @@ def getMessages(id):
                 name = mesg['name']
                 actualMsg = mesg['message']
                 addstr('--------------------------------------\n')
-                addstr(name + '\n'))
+                addstr(name + '\n')
                 addstr(actualMsg + '\n')
 
 
@@ -59,6 +60,7 @@ def create_newwin(height, width, starty, startx):
         box(local_win, 0, 0)
         wrefresh(local_win)
         return local_win
+        
 
 # method to connect to the socket with some error handling... :-)
 def connectServer():
@@ -68,19 +70,24 @@ def connectServer():
                 mvaddstr(1, 1, 'Could not connect to server')
 
 
-def main():
-        global running
-        #signal bind listening for sigint
-        signal.signal(signal.SIGINT, signal_handler)
-        stdscr = initscr()
+def initCurses():
+        global stdscr
         cbreak()
         noecho()
         curs_set(0)
         keypad(stdscr, True)
-        connectServer()
         start_color()
         init_pair(1, COLOR_BLUE, COLOR_BLACK)
         refresh()
+
+
+def main():
+        global running
+        global stdscr
+        #signal bind listening for sigint
+        signal.signal(signal.SIGINT, signal_handler)
+        initCurses()
+        connectServer()        
         msgWin = create_newwin(7, 78, 16, 1)
         mvaddstr(16, 2, 'Send Message')
         menuWin = create_newwin(3,78, 23, 1)
@@ -91,6 +98,7 @@ def main():
                         running = False
         endwin()
         return 0
+
 
 #signal handler listening for ctrl+c command
 def signal_handler(sig, frame):
