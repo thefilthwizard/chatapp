@@ -52,10 +52,10 @@ def ping():
 
 
 def create_newwin(height, width, starty, startx):
-    local_win = newwin(height, width, starty, startx)
-    box(local_win, 0, 0)
-    wrefresh(local_win)
-    return local_win
+        local_win = newwin(height, width, starty, startx)
+        box(local_win, 0, 0)
+        wrefresh(local_win)
+        return local_win
 
 
 def main():
