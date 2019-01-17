@@ -69,6 +69,7 @@ def main():
         init_pair(1, COLOR_BLUE, COLOR_BLACK)        
         refresh()
         msgWin = create_newwin(7, 78, 16, 1)
+        mvaddstr(16, 2, 'Send Message')
         menuWin = create_newwin(3,78, 23, 1)
         mvaddstr(24, 2, '<ESC>exit', COLOR_PAIR(1) + A_BOLD)
         running = True
