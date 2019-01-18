@@ -99,7 +99,8 @@ def main():
         viewWin = create_newwin(14, 78 , 1, 1)
         scrollok(viewWin, True)      
         msgWin = create_newwin(7, 78, 16, 1)
-        mvaddstr(16, 2, 'Send Message')
+        waddstr(msgWin, 'Send Message')
+        wrefresh(msgWin)
         menuWin = create_newwin(3,78, 23, 1)
         mvaddstr(24, 2, '<ESC>exit', COLOR_PAIR(1) + A_BOLD)
         xpos = 2
@@ -110,10 +111,13 @@ def main():
                 if KEY == 27: # ESC key...
                         running = False
                 elif KEY == 10:
-                        wrefresh(msgWin)
+                        wclear(msgWin)
+                        box(msgWin, 0, 0)
+                        waddstr(msgWin, 'Send Message')
+                        wrefresh(msgWin)                       
                         xpos = 2
                         ypos = 17
-                        postMessage(msgString)
+                        #postMessage(msgString)
                         msgString = ''
                 else:
                         mvaddch(ypos, xpos, KEY, COLOR_PAIR(4))
@@ -122,7 +126,6 @@ def main():
                         if xpos >= 78:
                                 xpos = 2
                                 ypos = ypos + 1
-                refresh()
         endwin()
         return 0
 
