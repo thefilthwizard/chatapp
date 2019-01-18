@@ -110,7 +110,7 @@ def main():
                 KEY = getch()
                 if KEY == 27: # ESC key...
                         running = False
-                elif KEY == 10:
+                elif KEY == 10: # enter key
                         wclear(msgWin)
                         box(msgWin, 0, 0)
                         waddstr(msgWin, 'Send Message')
