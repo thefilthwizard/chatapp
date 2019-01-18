@@ -1,8 +1,8 @@
 from unicurses import *
 
 import requests
-import socketio
 import signal
+import socketio
 
 
 GETURL = 'http://192.243.100.152:8099/call'
@@ -60,7 +60,7 @@ def create_newwin(height, width, starty, startx):
         box(local_win, 0, 0)
         wrefresh(local_win)
         return local_win
-        
+
 
 # method to connect to the socket with some error handling... :-)
 def connectServer():
@@ -87,7 +87,7 @@ def main():
         #signal bind listening for sigint
         signal.signal(signal.SIGINT, signal_handler)
         initCurses()
-        connectServer()        
+        connectServer()
         msgWin = create_newwin(7, 78, 16, 1)
         mvaddstr(16, 2, 'Send Message')
         menuWin = create_newwin(3,78, 23, 1)
