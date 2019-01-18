@@ -13,6 +13,8 @@ POSTURL = 'http://192.243.100.152:8099/msg'
 running = True
 socket = socketio.Client()
 stdscr = initscr()
+viewWin = None
+menuWin = None
 
 
 # this triggers when a message is posted on the server.
@@ -30,15 +32,20 @@ def showUserConnected():
         mvaddstr(24, 63, 'user connected', COLOR_PAIR(2) + A_BOLD)
 
 
+# get and display all messages on server for selected chat id
 def getMessages(id):
+        global viewWin
+        wclear(viewWin)
+        wrefresh(viewWin)
         data = requests.get(url = GETURL, params = { 'id': id })
         allMsgs = data.json()
         for mesg in allMsgs:
                 name = mesg['name']
                 actualMsg = mesg['message']
-                addstr('--------------------------------------\n')
-                addstr(name + '\n')
-                addstr(actualMsg + '\n')
+                waddstr(viewWin, '--------------------------------------\n')
+                waddstr(viewWin, name + '\n')
+                waddstr(viewWin, actualMsg + '\n')
+        wrefresh(viewWin)
 
 
 def postMessage(Message):
@@ -49,7 +56,6 @@ def postMessage(Message):
                         mvaddstr(24, 66, 'Msg Posted', COLOR_PAIR(2) + A_BOLD)
         except:
                 mvaddstr(24, 62, 'Msg not Posted', COLOR_PAIR(3) + A_BOLD)
-
 
 
 def ping():
@@ -71,8 +77,10 @@ def create_newwin(height, width, starty, startx):
 def connectServer():
         try:
                 socket.connect('http://192.243.100.152:8099')
+                return True
         except:
                 mvaddstr(24, 50, 'Could not connect to server', COLOR_PAIR(3) + A_BOLD)
+                return False
 
 
 def initCurses():
@@ -92,26 +100,32 @@ def initCurses():
 def main():
         global running
         global stdscr
+        global viewWin
+        global menuWin
         #signal bind listening for sigint
         signal.signal(signal.SIGINT, signal_handler)
         initCurses()
-        connectServer()
         viewWin = create_newwin(14, 78 , 1, 1)
         scrollok(viewWin, True) 
         wrefresh(viewWin)
+        if connectServer():
+                getMessages(777)
         msgWin = create_newwin(7, 78, 16, 1)
         waddstr(msgWin, 'Send Message')
         wrefresh(msgWin)
         menuWin = create_newwin(3,78, 23, 1)
-        mvaddstr(24, 2, '<ESC>exit', COLOR_PAIR(1) + A_BOLD)
+        mvaddstr(24, 2, '<ESC>Exit', COLOR_PAIR(1) + A_BOLD)
         xpos = 2
         ypos = 17
         msgString = ''
         while running:
                 KEY = getch()
                 if KEY == 27: # ESC key...
+                        # just clear the terminal before exit
+                        clear()
+                        refresh()
                         running = False
-                elif KEY == 10: # enter key
+                elif KEY == 10: # enter key, submit message and clears input box
                         wclear(msgWin)
                         box(msgWin, 0, 0)
                         waddstr(msgWin, 'Send Message')
@@ -120,7 +134,7 @@ def main():
                         ypos = 17
                         #postMessage(msgString)
                         msgString = ''
-                else:
+                else: #takes text input and echos it to the msgWindow.. still needs alot of work
                         mvaddch(ypos, xpos, KEY, COLOR_PAIR(4))
                         msgString + msgString + chr(KEY)
                         xpos = xpos + 1
