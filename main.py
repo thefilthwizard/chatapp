@@ -41,10 +41,15 @@ def getMessages(id):
                 addstr(actualMsg + '\n')
 
 
-def postMessage():
-        msgsent = requests.post(POSTURL, { 'id': 777, 'name': 'python', 'message': '#test message from python/curses' })
-        if msgsent.status_code == 200:
-                addstr('Message posted on server')
+def postMessage(Message):
+        try:
+                msgsent = requests.post(POSTURL, { 'id': 777, 'name': 'python', 'message': Message })
+                if msgsent.status_code == 200:
+                        stdscr.refresh()
+                        mvaddstr(24, 66, 'Msg Posted', COLOR_PAIR(2) + A_BOLD)
+        except:
+                mvaddstr(24, 62, 'Msg not Posted', COLOR_PAIR(3) + A_BOLD)
+
 
 
 def ping():
@@ -80,6 +85,7 @@ def initCurses():
         init_pair(1, COLOR_BLUE, COLOR_BLACK)
         init_pair(2, COLOR_GREEN, COLOR_BLACK)
         init_pair(3, COLOR_RED, COLOR_BLACK)
+        init_pair(4, COLOR_CYAN, COLOR_BLACK)
         refresh()
 
 
@@ -96,10 +102,27 @@ def main():
         mvaddstr(16, 2, 'Send Message')
         menuWin = create_newwin(3,78, 23, 1)
         mvaddstr(24, 2, '<ESC>exit', COLOR_PAIR(1) + A_BOLD)
+        xpos = 2
+        ypos = 17
+        msgString = ''
         while running:
                 KEY = getch()
                 if KEY == 27: # ESC key...
                         running = False
+                elif KEY == 10:
+                        wrefresh(msgWin)
+                        xpos = 2
+                        ypos = 17
+                        postMessage(msgString)
+                        msgString = ''
+                else:
+                        mvaddch(ypos, xpos, KEY, COLOR_PAIR(4))
+                        msgString + msgString + chr(KEY)
+                        xpos = xpos + 1
+                        if xpos >= 78:
+                                xpos = 2
+                                ypos = ypos + 1
+                refresh()
         endwin()
         return 0
 
