@@ -134,6 +134,14 @@ def main():
                         ypos = 17
                         #postMessage(msgString)
                         msgString = ''
+                elif KEY == 8: # backspace                
+                        if xpos > 2:
+                                xpos = xpos - 1                                
+                                move(ypos, xpos)
+                                delch()
+                                if len(msgString) > 0:
+                                        msgString[:-1]
+                        refresh()
                 else: #takes text input and echos it to the msgWindow.. still needs alot of work
                         mvaddch(ypos, xpos, KEY, COLOR_PAIR(4))
                         msgString + msgString + chr(KEY)
