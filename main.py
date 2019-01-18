@@ -1,8 +1,8 @@
 from unicurses import *
 
 import requests
-import socketio
 import signal
+import socketio
 
 
 GETURL = 'http://192.243.100.152:8099/call'
@@ -98,7 +98,7 @@ def main():
         connectServer()
         viewWin = create_newwin(14, 78 , 1, 1)
         scrollok(viewWin, True) 
-        wrefresh(viewWin)     
+        wrefresh(viewWin)
         msgWin = create_newwin(7, 78, 16, 1)
         waddstr(msgWin, 'Send Message')
         wrefresh(msgWin)
