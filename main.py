@@ -19,8 +19,8 @@ menuWin = None
 
 # this triggers when a message is posted on the server.
 @socket.on('message')
-def getLastMsg():
-        data = requests.get(url = GETURL, params = { 'id': 777 })
+def getLastMsg(msgID):
+        data = requests.get(url = GETURL, params = { 'id': msgID })
         allMsgs = data.json()
         lastMsg = allMsgs[len(allMsgs) - 1]
         return lastMsg
@@ -61,9 +61,9 @@ def postMessage(Message):
 def ping():
         ping = requests.get(url = PINGURL)
         if ping.status_code == 200:
-                addstr('Connected to server\n')
+                return True
         else:
-                addstr('Server Connection failed\n')
+                return False
 
 
 def create_newwin(height, width, starty, startx):
@@ -132,8 +132,11 @@ def main():
                         wrefresh(msgWin)                       
                         xpos = 2
                         ypos = 17
-                        #postMessage(msgString)
-                        msgString = ''
+                        if ping(): 
+                                postMessage(msgString)
+                                waddstr(viewWin, getLastMsg(777))
+                                wrefresh(viewWin)
+                        msgString = ''                        
                 elif KEY == 8: # backspace                
                         if xpos > 2:
                                 xpos = xpos - 1                                
