@@ -1,4 +1,6 @@
-from unicurses import *
+
+from curses import *
+import curses
 
 import requests
 import signal
@@ -14,7 +16,7 @@ POSTURL = HOST + 'msg'
 
 running = True
 socket = socketio.Client()
-stdscr = initscr()
+stdscr = curses.initscr()
 viewWin = None
 menuWin = None
 user = None
@@ -27,10 +29,10 @@ def updateLastMesg():
         lastMsg = getLastMsg(MSGIDSTREAM)
         name = lastMsg['name']
         actualMsg = lastMsg['message']
-        waddstr(viewWin, '--------------------------------------\n')
-        waddstr(viewWin, name + '\n')
-        waddstr(viewWin, actualMsg + '\n')
-        wrefresh(viewWin)
+        viewWin.addstr( '--------------------------------------\n')
+        viewWin.addstr(name + '\n')
+        viewWin.addstr(actualMsg + '\n')
+        viewWin.refresh()
 
 
 def getLastMsg(msgID):
@@ -43,23 +45,24 @@ def getLastMsg(msgID):
 # just trigger when someone connects to the server... not really needed, used for testing
 @socket.on('userconnected')
 def showUserConnected():
-        mvaddstr(24, 63, 'user connected', COLOR_PAIR(2) + A_BOLD)
+        global menuWin
+        menuWin.addstr(24, 63, 'user connected', color_pair(2) + A_BOLD)
 
 
 # get and display all messages on server for selected chat id
 def getMessages(id):
         global viewWin
-        wclear(viewWin)
-        wrefresh(viewWin)
+        viewWin.clear()
+        viewWin.refresh()
         data = requests.get(url = GETURL, params = { 'id': id })
         allMsgs = data.json()
         for mesg in allMsgs:
                 name = mesg['name']
                 actualMsg = mesg['message']
-                waddstr(viewWin, '--------------------------------------\n')
-                waddstr(viewWin, name + '\n')
-                waddstr(viewWin, actualMsg + '\n')
-        wrefresh(viewWin)
+                viewWin.addstr(viewWin, '--------------------------------------\n')
+                viewWin.addstr(viewWin, name + '\n')
+                viewWin.addstr(viewWin, actualMsg + '\n')
+        viewWin.refresh()
 
 
 def postMessage(Message):
@@ -68,17 +71,20 @@ def postMessage(Message):
 
 
 def ping():
-        ping = requests.get(url = PINGURL)
-        if ping.status_code == 200:
-                return True
-        else:
+        try: 
+                ping = requests.get(url = PINGURL)
+                if ping.status_code == 200:
+                        return True
+                else:
+                        return False
+        except:
                 return False
 
 
 def create_newwin(height, width, starty, startx):
-        local_win = newwin(height, width, starty, startx)
-        box(local_win, 0, 0)
-        wrefresh(local_win)
+        local_win = curses.newwin(height, width, starty, startx)
+        local_win.border()
+        local_win.refresh()
         return local_win
 
 
@@ -88,34 +94,33 @@ def connectServer():
                 socket.connect(HOST)
                 return True
         except:
-                mvaddstr(24, 50, 'Could not connect to server', COLOR_PAIR(3) + A_BOLD)
                 return False
 
 
 def initCurses():
         global stdscr
-        cbreak()
-        noecho()
+        curses.cbreak()
+        curses.noecho()
         curs_set(0)
-        keypad(stdscr, True)
+        stdscr.keypad( True)
         start_color()
-        init_pair(1, COLOR_BLUE, COLOR_BLACK)
-        init_pair(2, COLOR_GREEN, COLOR_BLACK)
-        init_pair(3, COLOR_RED, COLOR_BLACK)
-        init_pair(4, COLOR_CYAN, COLOR_BLACK)
-        refresh()
+        init_pair(1, curses.COLOR_BLUE, curses.COLOR_BLACK)
+        init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
+        init_pair(3, curses.COLOR_RED, curses.COLOR_BLACK)
+        init_pair(4, curses.COLOR_CYAN, curses.COLOR_BLACK)
+        stdscr.refresh()
 
 def destroyCurses():
         global stdscr
         global viewWin
         global menuWin
-        nocbreak()
-        keypad(stdscr, False)
-        echo()
-        endwin()
+        curses.nocbreak()
+        stdscr.keypad(False)
+        curses.echo()
+        curses.endwin()
 
 
-def getUsername():
+#def getUsername():
 
 
 
@@ -128,31 +133,31 @@ def main():
         #signal bind listening for sigint
         # signal.signal(signal.SIGINT, signal_handler)
         initCurses()
-        user = getUsername()
+        #user = getUsername()
         viewWin = create_newwin(14, 78 , 1, 1)
-        scrollok(viewWin, True)
-        # wrefresh(viewWin)
+        viewWin.scrollok( True)
+        viewWin.refresh()
         if connectServer():
                 getMessages(MSGIDSTREAM)
         msgWin = create_newwin(7, 78, 16, 1)
-        waddstr(msgWin, 'Send Message')
-        # wrefresh(msgWin)
+        msgWin.addstr(0, 2, 'Send Message')
+        msgWin.refresh()
         menuWin = create_newwin(3,78, 23, 1)
-        mvaddstr(24, 2, '<ESC>Exit', COLOR_PAIR(1) + A_BOLD)
+        menuWin.addstr(1, 2, '<ESC>Exit', color_pair(1) + A_BOLD)
+        menuWin.refresh()
         xpos = 2
         ypos = 17
         msgString = ''
-
         while running:
-                KEY = getch()
+                KEY = stdscr.getch()
                 if KEY == 27: # ESC key...
                         # just clear the terminal before exit
                         running = False
                 elif KEY == 10: # enter key, submit message and clears input box
-                        wclear(msgWin)
-                        box(msgWin, 0, 0)
-                        waddstr(msgWin, 'Send Message')
-                        wrefresh(msgWin)
+                        msgWin.clear()
+                        msgWin.border()
+                        msgWin.addstr(0, 2, 'Send Message')
+                        msgWin.refresh()
                         xpos = 2
                         ypos = 17
                         if ping():
@@ -161,26 +166,25 @@ def main():
                 elif KEY == 8: # backspace
                         if xpos > 2:
                                 xpos = xpos - 1
-                                move(ypos, xpos)
-                                delch()
+                                stdscr.move(ypos, xpos)
+                                stdscr.delch()
                                 if len(msgString) > 0:
                                         msgString[:-1]
                         if xpos == 2 and ypos > 17:
                                 xpos = 77
                                 ypos = ypos - 1
-                                move(ypos, xpos)
-                                delch()
+                                stdscr.move(ypos, xpos)
+                                stdscr.delch()
                                 if len(msgString) > 0:
                                         msgString[:-1]
-                        refresh()
+                        stdscr.refresh()
                 else: #takes text input and echos it to the msgWindow.. still needs alot of work
-                        mvaddch(ypos, xpos, KEY, COLOR_PAIR(4))
+                        stdscr.addch(ypos, xpos, KEY, color_pair(4))
                         msgString = msgString + chr(KEY)
                         xpos = xpos + 1
                         if xpos >= 77:
                                 xpos = 2
                                 ypos = ypos + 1
-
         destroyCurses()
         return 0
 
