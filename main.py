@@ -46,7 +46,7 @@ def getLastMsg(msgID):
 @socket.on('userconnected')
 def showUserConnected():
     global menuWin
-    menuWin.addstr(24, 63, 'user connected', color_pair(2) + A_BOLD)
+    menuWin.addstr(1, 63, 'user connected', color_pair(2) + A_BOLD)
 
 
 # get and display all messages on server for selected chat id
