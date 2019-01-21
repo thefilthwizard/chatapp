@@ -5,13 +5,12 @@ import requests
 import signal
 import socketio
 
-HOST = 'http://192.243.100.152:8099/'
+HOST = 'http://localhost:8099/'
 MSGIDSTREAM = 777
 
 GETURL = HOST + 'call'
 PINGURL = HOST + 'ping'
 POSTURL = HOST + 'msg'
-
 
 running = True
 socket = socketio.Client()
@@ -19,7 +18,6 @@ stdscr = curses.initscr()
 viewWin = None
 menuWin = None
 user = None
-
 
 # this triggers when a message is posted on the server.
 @socket.on('message')
@@ -32,8 +30,6 @@ def updateLastMesg():
     viewWin.addstr(name + '\n')
     viewWin.addstr(actualMsg + '\n')
     viewWin.refresh()
-        
-
 
 def getLastMsg(msgID):
     data = requests.get(url = GETURL, params = { 'id': msgID })
@@ -41,13 +37,11 @@ def getLastMsg(msgID):
     lastMsg = allMsgs[len(allMsgs) - 1]
     return lastMsg
 
-
 # just trigger when someone connects to the server... not really needed, used for testing
 @socket.on('userconnected')
 def showUserConnected():
     global menuWin
-    menuWin.addstr(1, 63, 'user connected', color_pair(2) + A_BOLD)
-
+    menuWin.addstr(1, 63, 'user connected', color_pair(2) + curses.A_BOLD)
 
 # get and display all messages on server for selected chat id
 def getMessages(id):
@@ -64,11 +58,9 @@ def getMessages(id):
         viewWin.addstr(actualMsg + '\n')
     viewWin.refresh()
 
-
 def postMessage(Message):
     global user
     msgsent = requests.post(POSTURL, { 'id': MSGIDSTREAM, 'name': user, 'message': Message })
-
 
 def ping():
     try: 
@@ -80,13 +72,11 @@ def ping():
     except:
         return False
 
-
 def create_newwin(height, width, starty, startx):
     local_win = curses.newwin(height, width, starty, startx)
     local_win.border()
     local_win.refresh()
     return local_win
-
 
 # method to connect to the socket with some error handling... :-)
 def connectServer():
@@ -95,7 +85,6 @@ def connectServer():
         return True
     except:
         return False
-
 
 def initCurses():
     global stdscr
@@ -119,7 +108,6 @@ def destroyCurses():
     curses.echo()
     curses.endwin()
 
-
 def getUsername():
     tempUserName = ''
     userWin = create_newwin(3, 30, 5, 5)
@@ -135,7 +123,6 @@ def getUsername():
     curses.noecho()
     return tempUserName
 
-
 def main():
     global running
     global stdscr
@@ -149,14 +136,14 @@ def main():
     viewWin = create_newwin(14, 78 , 1, 1)
     viewWin.scrollok( True)
     viewWin.refresh()
-    if connectServer():
-            getMessages(MSGIDSTREAM)
     msgWin = create_newwin(7, 78, 16, 1)
     msgWin.addstr(0, 2, 'Send Message')
     msgWin.refresh()
     menuWin = create_newwin(3,78, 23, 1)
-    menuWin.addstr(1, 2, '<ESC>Exit', color_pair(1) + A_BOLD)
+    menuWin.addstr(1, 2, '<ESC>Exit', color_pair(1) + curses.A_BOLD)
     menuWin.refresh()
+    if connectServer():
+            getMessages(MSGIDSTREAM)    
     xpos = 2
     ypos = 17
     msgString = ''
@@ -200,13 +187,11 @@ def main():
     destroyCurses()
     return 0
 
-
 #signal handler listening for ctrl+c command
 def signal_handler(sig, frame):
     global running
     running = False
     print('You pressed Ctrl+C!')
-
 
 if __name__ == '__main__':
     main()
