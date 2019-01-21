@@ -59,9 +59,9 @@ def getMessages(id):
     for mesg in allMsgs:
         name = mesg['name']
         actualMsg = mesg['message']
-        viewWin.addstr(viewWin, '--------------------------------------\n')
-        viewWin.addstr(viewWin, name + '\n')
-        viewWin.addstr(viewWin, actualMsg + '\n')
+        viewWin.addstr('--------------------------------------\n')
+        viewWin.addstr(name + '\n')
+        viewWin.addstr(actualMsg + '\n')
     viewWin.refresh()
 
 
