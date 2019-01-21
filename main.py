@@ -141,12 +141,19 @@ def main():
                                 delch()
                                 if len(msgString) > 0:
                                         msgString[:-1]
-                        refresh()
+                        if xpos == 2 and ypos > 17:
+                                xpos = 77
+                                ypos = ypos - 1
+                                move(ypos, xpos)
+                                delch()
+                                if len(msgString) > 0:
+                                        msgString[:-1]
+                        refresh() 
                 else: #takes text input and echos it to the msgWindow.. still needs alot of work
                         mvaddch(ypos, xpos, KEY, COLOR_PAIR(4))
                         msgString + msgString + chr(KEY)
                         xpos = xpos + 1
-                        if xpos >= 78:
+                        if xpos >= 77:
                                 xpos = 2
                                 ypos = ypos + 1
         endwin()
