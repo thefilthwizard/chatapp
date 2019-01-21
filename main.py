@@ -17,6 +17,7 @@ socket = socketio.Client()
 stdscr = initscr()
 viewWin = None
 menuWin = None
+user = None
 
 
 # this triggers when a message is posted on the server.
@@ -62,13 +63,8 @@ def getMessages(id):
 
 
 def postMessage(Message):
-        try:
-                msgsent = requests.post(POSTURL, { 'id': MSGIDSTREAM, 'name': 'python', 'message': Message })
-                if msgsent.status_code == 200:
-                        stdscr.refresh()
-                        mvaddstr(24, 66, 'Msg Posted', COLOR_PAIR(2) + A_BOLD)
-        except:
-                mvaddstr(24, 62, 'Msg not Posted', COLOR_PAIR(3) + A_BOLD)
+        global user
+        msgsent = requests.post(POSTURL, { 'id': MSGIDSTREAM, 'name': user, 'message': Message })
 
 
 def ping():
@@ -110,14 +106,20 @@ def initCurses():
         refresh()
 
 
+def getUsername():
+
+
+
 def main():
         global running
         global stdscr
         global viewWin
         global menuWin
+        global user
         #signal bind listening for sigint
         signal.signal(signal.SIGINT, signal_handler)
         initCurses()
+        user = getUsername()
         viewWin = create_newwin(14, 78 , 1, 1)
         scrollok(viewWin, True) 
         wrefresh(viewWin)
