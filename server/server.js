@@ -36,6 +36,7 @@ io.on('connection', () => {
 app.post('/msg', (req, res) => {
   try {
     const message = new Message(req.body);
+    console.log('Msg: ' + message);
     const savedMessage = message.save((err) => {
       res.sendStatus(200);
       console.log(err);

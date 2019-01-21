@@ -4,10 +4,12 @@ import requests
 import signal
 import socketio
 
+HOST = 'http://192.243.100.152:8099/'
+MSGIDSTREAM = 777
 
-GETURL = 'http://192.243.100.152:8099/call'
-PINGURL = 'http://192.243.100.152:8099/ping'
-POSTURL = 'http://192.243.100.152:8099/msg'
+GETURL = HOST + 'call'
+PINGURL = HOST + 'ping'
+POSTURL = HOST + 'msg'
 
 
 running = True
@@ -19,6 +21,17 @@ menuWin = None
 
 # this triggers when a message is posted on the server.
 @socket.on('message')
+def updateLastMesg():
+        global viewWin
+        lastMsg = getLastMsg(MSGIDSTREAM)
+        name = lastMsg['name']
+        actualMsg = lastMsg['message']
+        waddstr(viewWin, '--------------------------------------\n')
+        waddstr(viewWin, name + '\n')
+        waddstr(viewWin, actualMsg + '\n')
+        wrefresh(viewWin)
+
+
 def getLastMsg(msgID):
         data = requests.get(url = GETURL, params = { 'id': msgID })
         allMsgs = data.json()
@@ -50,7 +63,7 @@ def getMessages(id):
 
 def postMessage(Message):
         try:
-                msgsent = requests.post(POSTURL, { 'id': 777, 'name': 'python', 'message': Message })
+                msgsent = requests.post(POSTURL, { 'id': MSGIDSTREAM, 'name': 'python', 'message': Message })
                 if msgsent.status_code == 200:
                         stdscr.refresh()
                         mvaddstr(24, 66, 'Msg Posted', COLOR_PAIR(2) + A_BOLD)
@@ -76,7 +89,7 @@ def create_newwin(height, width, starty, startx):
 # method to connect to the socket with some error handling... :-)
 def connectServer():
         try:
-                socket.connect('http://192.243.100.152:8099')
+                socket.connect(HOST)
                 return True
         except:
                 mvaddstr(24, 50, 'Could not connect to server', COLOR_PAIR(3) + A_BOLD)
@@ -109,7 +122,7 @@ def main():
         scrollok(viewWin, True) 
         wrefresh(viewWin)
         if connectServer():
-                getMessages(777)
+                getMessages(MSGIDSTREAM)
         msgWin = create_newwin(7, 78, 16, 1)
         waddstr(msgWin, 'Send Message')
         wrefresh(msgWin)
@@ -124,6 +137,7 @@ def main():
                         # just clear the terminal before exit
                         clear()
                         refresh()
+                        endwin()
                         running = False
                 elif KEY == 10: # enter key, submit message and clears input box
                         wclear(msgWin)
@@ -134,8 +148,6 @@ def main():
                         ypos = 17
                         if ping(): 
                                 postMessage(msgString)
-                                waddstr(viewWin, getLastMsg(777))
-                                wrefresh(viewWin)
                         msgString = ''                        
                 elif KEY == 8: # backspace                
                         if xpos > 2:
@@ -154,12 +166,11 @@ def main():
                         refresh() 
                 else: #takes text input and echos it to the msgWindow.. still needs alot of work
                         mvaddch(ypos, xpos, KEY, COLOR_PAIR(4))
-                        msgString + msgString + chr(KEY)
+                        msgString = msgString + chr(KEY)
                         xpos = xpos + 1
                         if xpos >= 77:
                                 xpos = 2
                                 ypos = ypos + 1
-        endwin()
         return 0
 
 
