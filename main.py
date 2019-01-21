@@ -109,6 +109,15 @@ def initCurses():
         init_pair(4, COLOR_CYAN, COLOR_BLACK)
         refresh()
 
+def destroyCurses():
+        global stdscr
+        global viewWin
+        global menuWin
+        nocbreak()
+        keypad(stdscr, False)
+        echo()
+        endwin()
+
 
 def main():
         global running
@@ -116,42 +125,40 @@ def main():
         global viewWin
         global menuWin
         #signal bind listening for sigint
-        signal.signal(signal.SIGINT, signal_handler)
+        # signal.signal(signal.SIGINT, signal_handler)
         initCurses()
         viewWin = create_newwin(14, 78 , 1, 1)
-        scrollok(viewWin, True) 
-        wrefresh(viewWin)
+        scrollok(viewWin, True)
+        # wrefresh(viewWin)
         if connectServer():
                 getMessages(MSGIDSTREAM)
         msgWin = create_newwin(7, 78, 16, 1)
         waddstr(msgWin, 'Send Message')
-        wrefresh(msgWin)
+        # wrefresh(msgWin)
         menuWin = create_newwin(3,78, 23, 1)
         mvaddstr(24, 2, '<ESC>Exit', COLOR_PAIR(1) + A_BOLD)
         xpos = 2
         ypos = 17
         msgString = ''
+
         while running:
                 KEY = getch()
                 if KEY == 27: # ESC key...
                         # just clear the terminal before exit
-                        clear()
-                        refresh()
-                        endwin()
                         running = False
                 elif KEY == 10: # enter key, submit message and clears input box
                         wclear(msgWin)
                         box(msgWin, 0, 0)
                         waddstr(msgWin, 'Send Message')
-                        wrefresh(msgWin)                       
+                        wrefresh(msgWin)
                         xpos = 2
                         ypos = 17
-                        if ping(): 
+                        if ping():
                                 postMessage(msgString)
-                        msgString = ''                        
-                elif KEY == 8: # backspace                
+                        msgString = ''
+                elif KEY == 8: # backspace
                         if xpos > 2:
-                                xpos = xpos - 1                                
+                                xpos = xpos - 1
                                 move(ypos, xpos)
                                 delch()
                                 if len(msgString) > 0:
@@ -163,7 +170,7 @@ def main():
                                 delch()
                                 if len(msgString) > 0:
                                         msgString[:-1]
-                        refresh() 
+                        refresh()
                 else: #takes text input and echos it to the msgWindow.. still needs alot of work
                         mvaddch(ypos, xpos, KEY, COLOR_PAIR(4))
                         msgString = msgString + chr(KEY)
@@ -171,6 +178,8 @@ def main():
                         if xpos >= 77:
                                 xpos = 2
                                 ypos = ypos + 1
+
+        destroyCurses()
         return 0
 
 
