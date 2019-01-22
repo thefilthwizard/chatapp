@@ -12,12 +12,12 @@ GETURL = HOST + 'call'
 PINGURL = HOST + 'ping'
 POSTURL = HOST + 'msg'
 
+menuWin = None
 running = True
 socket = socketio.Client()
 stdscr = curses.initscr()
-viewWin = None
-menuWin = None
 user = None
+viewWin = None
 
 # this triggers when a message is posted on the server.
 @socket.on('message')
@@ -63,7 +63,7 @@ def postMessage(Message):
     msgsent = requests.post(POSTURL, { 'id': MSGIDSTREAM, 'name': user, 'message': Message })
 
 def ping():
-    try: 
+    try:
         ping = requests.get(url = PINGURL)
         if ping.status_code == 200:
             return True
@@ -131,7 +131,7 @@ def main():
     global menuWin
     global user
     #signal bind listening for sigint
-    # signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGINT, signal_handler)
     initCurses()
     user = getUsername()
     viewWin = create_newwin(14, 78 , 1, 1)
@@ -144,7 +144,7 @@ def main():
     menuWin.addstr(1, 2, '<ESC>Exit', color_pair(1) + curses.A_BOLD)
     menuWin.refresh()
     if connectServer():
-            getMessages(MSGIDSTREAM)    
+            getMessages(MSGIDSTREAM)
     xpos = 2
     ypos = 17
     msgString = ''
