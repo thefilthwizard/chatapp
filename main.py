@@ -1,5 +1,5 @@
-from curses import *
 import curses
+from curses import *
 
 import requests
 import signal
@@ -41,7 +41,7 @@ def getLastMsg(msgID):
 @socket.on('userconnected')
 def showUserConnected():
     global menuWin
-    menuWin.addstr(1, 63, 'user connected', color_pair(2) + curses.A_BOLD)
+    menuWin.addstr(1, 63, 'user connected', curses.color_pair(2) + curses.A_BOLD)
 
 # get and display all messages on server for selected chat id
 def getMessages(id):
@@ -90,13 +90,13 @@ def initCurses():
     global stdscr
     curses.cbreak()
     curses.noecho()
-    curs_set(0)
+    curses.curs_set(0)
     stdscr.keypad( True)
-    start_color()
-    init_pair(1, curses.COLOR_BLUE, curses.COLOR_BLACK)
-    init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
-    init_pair(3, curses.COLOR_RED, curses.COLOR_BLACK)
-    init_pair(4, curses.COLOR_CYAN, curses.COLOR_BLACK)
+    curses.start_color()
+    curses.init_pair(1, curses.COLOR_BLUE, curses.COLOR_BLACK)
+    curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
+    curses.init_pair(3, curses.COLOR_RED, curses.COLOR_BLACK)
+    curses.init_pair(4, curses.COLOR_CYAN, curses.COLOR_BLACK)
     stdscr.refresh()
 
 def destroyCurses():
@@ -141,7 +141,7 @@ def main():
     msgWin.addstr(0, 2, 'Send Message')
     msgWin.refresh()
     menuWin = create_newwin(3,78, 23, 1)
-    menuWin.addstr(1, 2, '<ESC>Exit', color_pair(1) + curses.A_BOLD)
+    menuWin.addstr(1, 2, '<ESC>Exit', curses.color_pair(1) + curses.A_BOLD)
     menuWin.refresh()
     if connectServer():
             getMessages(MSGIDSTREAM)
@@ -180,7 +180,7 @@ def main():
                     msgString = msgString[:-1]
             stdscr.refresh()
         else: #takes text input and echos it to the msgWindow.. still needs alot of work
-            stdscr.addch(ypos, xpos, KEY, color_pair(4))
+            stdscr.addch(ypos, xpos, KEY, curses.color_pair(4))
             msgString = msgString + chr(KEY)
             xpos = xpos + 1
             if xpos >= 77:
