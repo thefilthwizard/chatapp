@@ -5,7 +5,7 @@ import requests
 import signal
 import socketio
 
-HOST = 'http://191.243.100.152:8099/'
+HOST = 'http://192.243.100.152:8099/'
 MSGIDSTREAM = 777
 
 GETURL = HOST + 'call'
@@ -152,6 +152,7 @@ def main():
         KEY = stdscr.getch()
         if KEY == 27: # ESC key...
             # just clear the terminal before exit
+            destroyCurses()
             running = False
         elif KEY == 10: # enter key, submit message and clears input box
             msgWin.clear()
@@ -185,12 +186,12 @@ def main():
             if xpos >= 77:
                 xpos = 2
                 ypos = ypos + 1
-    destroyCurses()
     return 0
 
 #signal handler listening for ctrl+c command
 def signal_handler(sig, frame):
     global running
+    destroyCurses()
     running = False
     print('You pressed Ctrl+C!')
 
