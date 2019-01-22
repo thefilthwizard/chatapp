@@ -5,7 +5,7 @@ import requests
 import signal
 import socketio
 
-HOST = 'http://localhost:8099/'
+HOST = 'http://191.243.100.152:8099/'
 MSGIDSTREAM = 777
 
 GETURL = HOST + 'call'
