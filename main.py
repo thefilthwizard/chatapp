@@ -5,7 +5,7 @@ import requests
 import signal
 import socketio
 
-HOST = 'http://192.243.100.152:8099/'
+HOST = 'http://localhost:8099/'
 MSGIDSTREAM = 777
 
 GETURL = HOST + 'call'
@@ -170,14 +170,14 @@ def main():
                 stdscr.move(ypos, xpos)
                 stdscr.delch()
                 if len(msgString) > 0:
-                    msgString[:-1]
+                    msgString = msgString[:-1]
             if xpos == 2 and ypos > 17:
                 xpos = 77
                 ypos = ypos - 1
                 stdscr.move(ypos, xpos)
                 stdscr.delch()
                 if len(msgString) > 0:
-                    msgString[:-1]
+                    msgString = msgString[:-1]
             stdscr.refresh()
         else: #takes text input and echos it to the msgWindow.. still needs alot of work
             stdscr.addch(ypos, xpos, KEY, color_pair(4))
