@@ -103,6 +103,7 @@ def destroyCurses():
     global stdscr
     global viewWin
     global menuWin
+    socket.disconnect()
     curses.nocbreak()
     stdscr.keypad(False)
     curses.echo()
