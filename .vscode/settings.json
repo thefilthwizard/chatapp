@@ -4,6 +4,6 @@
         "editor.insertSpaces": true,
         "editor.tabSize": 4
     },
-    "python.linting.enabled": false,
+    "python.linting.enabled": true,
     "python.linting.pylintEnabled": true
 }
