@@ -15,7 +15,7 @@
     "fs": "0.0.1-security",
     "localtunnel": "^1.9.1",
     "mongoose": "^5.4.6",
-    "socket.io": "^2.2.0",
+    "socket.io": "^2.4.0",
     "ssl-root-cas": "^1.3.1"
   }
 }
